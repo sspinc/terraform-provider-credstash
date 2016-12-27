@@ -46,6 +46,11 @@ resource "aws_db_instance" "postgres" {
 AWS credentials are not directly set. Use one of the methods discussed
 [here][awscred].
 
+## Dependencies
+
+For vendoring [govendor][govendor] is used.
+
 [credstash]: https://github.com/fugue/credstash
 [awscred]: https://github.com/aws/aws-sdk-go#configuring-credentials
 [provider_binary]: https://github.com/sspinc/terraform-provider-credstash/releases/latest
+[govendor]: https://github.com/kardianos/govendor
