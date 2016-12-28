@@ -1,5 +1,7 @@
 # Terraform provider for credstash secrets
 
+[![CircleCI](https://circleci.com/gh/sspinc/terraform-provider-credstash.svg?style=svg)](https://circleci.com/gh/sspinc/terraform-provider-credstash)
+
 Read secrets stored with [credstash][credstash].
 
 ## Install
