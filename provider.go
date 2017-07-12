@@ -41,7 +41,7 @@ func provider() terraform.ResourceProvider {
 				Type:        schema.TypeString,
 				Required:    false,
 				Description: "The profile that should be used to connect to AWS",
-				InputDefault: "default",	
+				InputDefault: "",	
 			},			
 		},
 		ConfigureFunc: providerConfig,

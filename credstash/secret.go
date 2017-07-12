@@ -35,7 +35,7 @@ func GetSecret(req GetSecretRequest) (string, error) {
 	var sess *session.Session
 
 	if req.AWSSession != nil {
-		if req.Profile != nil {
+		if req.Profile != "" {
 			os.Setenv("AWS_PROFILE", req.Profile)
 		}		
 		sess = req.AWSSession
