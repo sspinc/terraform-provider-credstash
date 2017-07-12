@@ -37,6 +37,12 @@ func provider() terraform.ResourceProvider {
 					return "credential-store", nil
 				},
 			},
+			"profile": {
+				Type:        schema.TypeString,
+				Required:    false,
+				Description: "The profile that should be used to connect to AWS",
+				InputDefault: nil,	
+			},			
 		},
 		ConfigureFunc: providerConfig,
 	}
