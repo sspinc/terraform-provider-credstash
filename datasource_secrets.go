@@ -55,6 +55,7 @@ func dataSourceSecretRead(d *schema.ResourceData, meta interface{}) error {
 		EncryptionContext: context,
 		Table:             cfg.table,
 		Region:            cfg.region,
+		Profile:           cfg.profile,
 	}
 
 	log.Printf("[DEBUG] Read secret: %+v", req)

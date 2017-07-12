@@ -24,6 +24,7 @@ type GetSecretRequest struct {
 	Table             string
 	Version           string
 	Region            string
+	Profile           string
 	EncryptionContext map[string]string
 
 	AWSSession *session.Session
@@ -33,6 +34,9 @@ func GetSecret(req GetSecretRequest) (string, error) {
 	var sess *session.Session
 
 	if req.AWSSession != nil {
+		if req.Profile != nil {
+			os.Setenv("AWS_PROFILE", req.Profile)
+		}		
 		sess = req.AWSSession
 	} else {
 		var err error
