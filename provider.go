@@ -8,6 +8,7 @@ import (
 type config struct {
 	region string
 	table  string
+	profile string
 }
 
 var _ terraform.ResourceProvider = provider()
@@ -40,8 +41,7 @@ func provider() terraform.ResourceProvider {
 			"profile": {
 				Type:        schema.TypeString,
 				Required:    false,
-				Description: "The profile that should be used to connect to AWS",
-				InputDefault: "",	
+				Description: "The profile that should be used to connect to AWS",	
 			},			
 		},
 		ConfigureFunc: providerConfig,
