@@ -1,6 +1,6 @@
 # Terraform provider for credstash secrets
 
-[![CircleCI](https://circleci.com/gh/sspinc/terraform-provider-credstash.svg?style=svg)](https://circleci.com/gh/sspinc/terraform-provider-credstash)
+[![CircleCI](https://circleci.com/gh/asafdav/terraform-provider-credstash.svg?style=svg)](https://circleci.com/gh/asafdav/terraform-provider-credstash)
 
 Read secrets stored with [credstash][credstash].
 
@@ -17,7 +17,7 @@ Read secrets stored with [credstash][credstash].
 
 ### From source
 
-    $ go get -v -u github.com/sspinc/terraform-provider-credstash
+    $ go get -v -u github.com/asafdav/terraform-provider-credstash
 
 ## Usage
 
@@ -54,5 +54,5 @@ For vendoring [govendor][govendor] is used.
 
 [credstash]: https://github.com/fugue/credstash
 [awscred]: https://github.com/aws/aws-sdk-go#configuring-credentials
-[provider_binary]: https://github.com/sspinc/terraform-provider-credstash/releases/latest
+[provider_binary]: https://github.com/asafdav/terraform-provider-credstash/releases/latest
 [govendor]: https://github.com/kardianos/govendor
