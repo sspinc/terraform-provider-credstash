@@ -12,7 +12,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"hash"
-	"os"
+	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -35,13 +35,21 @@ func GetSecret(req GetSecretRequest) (string, error) {
 	var sess *session.Session
 
 	if req.AWSSession != nil {
-		if req.Profile != "" {
-			os.Setenv("AWS_PROFILE", req.Profile)
-		}		
 		sess = req.AWSSession
 	} else {
 		var err error
-		sess, err = session.NewSession(&aws.Config{Region: aws.String(req.Region)})
+		if req.Profile != "default" {
+			log.Printf("[DEBUG] creates a session for profile: %s", req.Profile)
+			sess, err = session.NewSessionWithOptions(session.Options{
+				 Config: aws.Config{Region: aws.String(req.Region)},
+				 Profile: req.Profile,
+				 SharedConfigState: session.SharedConfigEnable,
+			})			
+			
+		} else {
+			sess, err = session.NewSession(&aws.Config{Region: aws.String(req.Region)})	
+		}				
+				
 		if err != nil {
 			return "", err
 		}
