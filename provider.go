@@ -40,8 +40,12 @@ func provider() terraform.ResourceProvider {
 			},
 			"profile": {
 				Type:        schema.TypeString,
-				Required:    false,
+				Required:    true,
+				DefaultFunc: func() (interface{}, error) {
+					return "default", nil
+				},
 				Description: "The profile that should be used to connect to AWS",	
+				InputDefault: "default",				
 			},			
 		},
 		ConfigureFunc: providerConfig,
@@ -52,6 +56,7 @@ func providerConfig(d *schema.ResourceData) (interface{}, error) {
 	cfg := config{
 		region: d.Get("region").(string),
 		table:  d.Get("table").(string),
+		profile:  d.Get("profile").(string),
 	}
 
 	return cfg, nil
