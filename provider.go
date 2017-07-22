@@ -6,8 +6,9 @@ import (
 )
 
 type config struct {
-	region string
-	table  string
+	region  string
+	table   string
+	profile string
 }
 
 var _ terraform.ResourceProvider = provider()
@@ -37,6 +38,15 @@ func provider() terraform.ResourceProvider {
 					return "credential-store", nil
 				},
 			},
+			"profile": {
+				Type:     schema.TypeString,
+				Required: true,
+				DefaultFunc: func() (interface{}, error) {
+					return "default", nil
+				},
+				Description:  "The profile that should be used to connect to AWS",
+				InputDefault: "default",
+			},
 		},
 		ConfigureFunc: providerConfig,
 	}
@@ -44,8 +54,9 @@ func provider() terraform.ResourceProvider {
 
 func providerConfig(d *schema.ResourceData) (interface{}, error) {
 	cfg := config{
-		region: d.Get("region").(string),
-		table:  d.Get("table").(string),
+		region:  d.Get("region").(string),
+		table:   d.Get("table").(string),
+		profile: d.Get("profile").(string),
 	}
 
 	return cfg, nil
