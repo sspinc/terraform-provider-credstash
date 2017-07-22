@@ -145,14 +145,9 @@ func getDigestFunc(digest string) (func() hash.Hash, error) {
 }
 
 func decryptKey(svc decrpyter, ciphertext []byte, ctx map[string]string) (dataKey, hmacKey []byte, err error) {
-	encCtx := make(map[string]*string, len(ctx))
-	for k, v := range ctx {
-		encCtx[k] = aws.String(v)
-	}
-
 	params := &kms.DecryptInput{
 		CiphertextBlob:    ciphertext,
-		EncryptionContext: encCtx,
+		EncryptionContext: aws.StringMap(ctx),
 	}
 
 	out, err := svc.Decrypt(params)
