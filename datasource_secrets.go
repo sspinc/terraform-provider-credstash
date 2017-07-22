@@ -42,24 +42,17 @@ func dataSourceSecret() *schema.Resource {
 }
 
 func dataSourceSecretRead(d *schema.ResourceData, meta interface{}) error {
-	cfg := meta.(config)
+	client := meta.(*credstash.Client)
 
+	name := d.Get("name").(string)
+	version := d.Get("version").(string)
 	context := make(map[string]string)
 	for k, v := range d.Get("context").(map[string]interface{}) {
 		context[k] = fmt.Sprintf("%v", v)
 	}
 
-	req := credstash.GetSecretRequest{
-		Name:              d.Get("name").(string),
-		Version:           d.Get("version").(string),
-		EncryptionContext: context,
-		Table:             cfg.table,
-		Region:            cfg.region,
-		Profile:           cfg.profile,
-	}
-
-	log.Printf("[DEBUG] Read secret: %+v", req)
-	value, err := credstash.GetSecret(req)
+	log.Printf("[DEBUG] Getting secret for name=%q version=%q context=%+v", name, version, context)
+	value, err := client.GetSecret(name, version, context)
 	if err != nil {
 		return err
 	}

@@ -1,17 +1,18 @@
 package main
 
 import (
+	"log"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
+	"github.com/sspinc/terraform-provider-credstash/credstash"
 )
 
-type config struct {
-	region  string
-	table   string
-	profile string
-}
-
 var _ terraform.ResourceProvider = provider()
+
+const defaultAWSProfile = "default"
 
 func provider() terraform.ResourceProvider {
 	return &schema.Provider{
@@ -42,7 +43,7 @@ func provider() terraform.ResourceProvider {
 				Type:     schema.TypeString,
 				Required: true,
 				DefaultFunc: func() (interface{}, error) {
-					return "default", nil
+					return defaultAWSProfile, nil
 				},
 				Description:  "The profile that should be used to connect to AWS",
 				InputDefault: "default",
@@ -53,11 +54,26 @@ func provider() terraform.ResourceProvider {
 }
 
 func providerConfig(d *schema.ResourceData) (interface{}, error) {
-	cfg := config{
-		region:  d.Get("region").(string),
-		table:   d.Get("table").(string),
-		profile: d.Get("profile").(string),
+	region := d.Get("region").(string)
+	table := d.Get("table").(string)
+	profile := d.Get("profile").(string)
+
+	var sess *session.Session
+	var err error
+	if profile != defaultAWSProfile {
+		log.Printf("[DEBUG] Creating a session for profile: %s", profile)
+		sess, err = session.NewSessionWithOptions(session.Options{
+			Config:            aws.Config{Region: aws.String(region)},
+			Profile:           profile,
+			SharedConfigState: session.SharedConfigEnable,
+		})
+	} else {
+		sess, err = session.NewSession(&aws.Config{Region: aws.String(region)})
+	}
+	if err != nil {
+		return nil, err
 	}
 
-	return cfg, nil
+	log.Printf("[DEBUG] Configured credstash for table %s", table)
+	return credstash.New(table, sess), nil
 }

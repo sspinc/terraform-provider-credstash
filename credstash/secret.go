@@ -12,79 +12,11 @@ import (
 	"encoding/hex"
 	"fmt"
 	"hash"
-	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/kms"
 )
-
-type GetSecretRequest struct {
-	Name              string
-	Table             string
-	Version           string
-	Region            string
-	Profile           string
-	EncryptionContext map[string]string
-
-	AWSSession *session.Session
-}
-
-func GetSecret(req GetSecretRequest) (string, error) {
-	var sess *session.Session
-
-	if req.AWSSession != nil {
-		sess = req.AWSSession
-	} else {
-		var err error
-		if req.Profile != "default" {
-			log.Printf("[DEBUG] creates a session for profile: %s", req.Profile)
-			sess, err = session.NewSessionWithOptions(session.Options{
-				Config:            aws.Config{Region: aws.String(req.Region)},
-				Profile:           req.Profile,
-				SharedConfigState: session.SharedConfigEnable,
-			})
-
-		} else {
-			sess, err = session.NewSession(&aws.Config{Region: aws.String(req.Region)})
-		}
-
-		if err != nil {
-			return "", err
-		}
-	}
-
-	s := secret{
-		decrypter: kms.New(sess),
-		dynamoDB:  dynamodb.New(sess),
-	}
-
-	return s.get(req)
-}
-
-type secret struct {
-	dynamoDB  dynamoDB
-	decrypter decrpyter
-}
-
-func (s secret) get(req GetSecretRequest) (string, error) {
-	material, err := getKeyMaterial(s.dynamoDB, req.Name, req.Version, req.Table)
-	if err != nil {
-		return "", err
-	}
-
-	dataKey, hmacKey, err := decryptKey(s.decrypter, material.Key, req.EncryptionContext)
-	if err != nil {
-		return "", err
-	}
-
-	if err := checkHMAC(material, hmacKey); err != nil {
-		return "", err
-	}
-
-	return decryptData(material, dataKey)
-}
 
 func decryptData(material keyMaterial, key []byte) (string, error) {
 	block, err := aes.NewCipher(key)
