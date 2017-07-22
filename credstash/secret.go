@@ -210,8 +210,8 @@ func getLatestVersion(svc dynamoDB, name, table string) (keyMaterial, error) {
 		return keyMaterial{}, err
 	}
 
-	if *out.Count == 0 {
-		return keyMaterial{}, fmt.Errorf("secret with name %s could not be found.", name)
+	if aws.Int64Value(out.Count) == 0 {
+		return keyMaterial{}, fmt.Errorf("secret with name %s could not be found", name)
 	}
 
 	return keyMaterialFromDBItem(out.Items[0])
@@ -258,7 +258,7 @@ func keyMaterialFromDBItem(item map[string]*dynamodb.AttributeValue) (keyMateria
 func getDigest(material map[string]*dynamodb.AttributeValue) string {
 	digest := "SHA256"
 	if dVal, ok := material["digest"]; ok {
-		digest = *dVal.S
+		digest = aws.StringValue(dVal.S)
 	}
 
 	return digest
@@ -270,7 +270,7 @@ func getString(item map[string]*dynamodb.AttributeValue, key string) (string, er
 		return "", fmt.Errorf("missing key: %s", key)
 	}
 
-	return *value.S, nil
+	return aws.StringValue(value.S), nil
 }
 
 func getStringAndDecode(item map[string]*dynamodb.AttributeValue, key string, f func(string) ([]byte, error)) ([]byte, error) {
