@@ -48,6 +48,15 @@ resource "aws_db_instance" "postgres" {
 AWS credentials are not directly set. Use one of the methods discussed
 [here][awscred].
 
+You can set a specific profile to use:
+
+```hcl
+provider "credstash" {
+    region  = "us-east-1"
+    profile = "my-profile"
+}
+```
+
 ## Dependencies
 
 For vendoring [govendor][govendor] is used.
