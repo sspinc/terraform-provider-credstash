@@ -29,24 +29,18 @@ func provider() terraform.ResourceProvider {
 				}, nil),
 				Description: "The region where AWS operations will take place. Examples\n" +
 					"are us-east-1, us-west-2, etc.",
-				InputDefault: "us-east-1",
 			},
 			"table": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "The DynamoDB table where the secrets are stored.",
-				DefaultFunc: func() (interface{}, error) {
-					return "credential-store", nil
-				},
+				Default:     "credential-store",
 			},
 			"profile": {
-				Type:     schema.TypeString,
-				Required: true,
-				DefaultFunc: func() (interface{}, error) {
-					return defaultAWSProfile, nil
-				},
-				Description:  "The profile that should be used to connect to AWS",
-				InputDefault: "default",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     defaultAWSProfile,
+				Description: "The profile that should be used to connect to AWS",
 			},
 		},
 		ConfigureFunc: providerConfig,
@@ -61,7 +55,7 @@ func providerConfig(d *schema.ResourceData) (interface{}, error) {
 	var sess *session.Session
 	var err error
 	if profile != defaultAWSProfile {
-		log.Printf("[DEBUG] Creating a session for profile: %s", profile)
+		log.Printf("[DEBUG] creating a session for profile: %s", profile)
 		sess, err = session.NewSessionWithOptions(session.Options{
 			Config:            aws.Config{Region: aws.String(region)},
 			Profile:           profile,
@@ -74,6 +68,6 @@ func providerConfig(d *schema.ResourceData) (interface{}, error) {
 		return nil, err
 	}
 
-	log.Printf("[DEBUG] Configured credstash for table %s", table)
+	log.Printf("[DEBUG] configured credstash for table %s", table)
 	return credstash.New(table, sess), nil
 }
