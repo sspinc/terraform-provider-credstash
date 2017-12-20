@@ -170,6 +170,16 @@ func keyMaterialFromDBItem(item map[string]*dynamodb.AttributeValue) (keyMateria
 	if material.HMAC, err = getStringAndDecode(item, "hmac", hex.DecodeString); err != nil {
 		return keyMaterial{}, err
 	}
+	// In credstash < 1.13.1 HMAC was store as a hex encoded string. After
+	// version 1.13.1 credstash started storing the value in a hex encoded
+	// binary value. To keep compatibility with both versions when the HMAC is
+	// empty after trying to decode it from a string field we try the binary
+	// field.
+	if len(material.HMAC) == 0 {
+		if material.HMAC, err = getBinaryStringAndDecode(item, "hmac", hex.DecodeString); err != nil {
+			return keyMaterial{}, err
+		}
+	}
 
 	if material.Key, err = getStringAndDecode(item, "key", base64.StdEncoding.DecodeString); err != nil {
 		return keyMaterial{}, err
@@ -206,4 +216,12 @@ func getStringAndDecode(item map[string]*dynamodb.AttributeValue, key string, f 
 		return nil, err
 	}
 	return f(s)
+}
+
+func getBinaryStringAndDecode(item map[string]*dynamodb.AttributeValue, key string, f func(string) ([]byte, error)) ([]byte, error) {
+	value, ok := item[key]
+	if !ok {
+		return nil, fmt.Errorf("missing key: %s", key)
+	}
+	return f(string(value.B))
 }

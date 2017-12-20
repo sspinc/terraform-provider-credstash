@@ -115,6 +115,18 @@ func TestKeyMaterialFromDDBResult(t *testing.T) {
 			item:       dummyItemWithMissingKey(),
 			shouldFail: true,
 		},
+		{
+			desc: "binary HMAC field",
+			item: dummyItemWithBinaryHMAC("01020304"),
+			km: keyMaterial{
+				Name:    "test_key",
+				Version: "0000000000000000001",
+				Digest:  "SHA256",
+				Key:     []byte{1, 2, 3, 4},
+				Content: []byte{1, 2, 3, 4},
+				HMAC:    []byte{1, 2, 3, 4},
+			},
+		},
 	}
 
 	for _, tt := range testCases {
@@ -170,6 +182,12 @@ func dummyItemWithAllFields() map[string]*dynamodb.AttributeValue {
 		"contents": attrValueB64String([]byte{1, 2, 3, 4}),
 		"key":      attrValueB64String([]byte{1, 2, 3, 4}),
 	}
+}
+
+func dummyItemWithBinaryHMAC(hmac string) map[string]*dynamodb.AttributeValue {
+	item := dummyItemWithAllFields()
+	item["hmac"] = &dynamodb.AttributeValue{B: []byte(hmac)}
+	return item
 }
 
 func dummyItemWithWrongKey() map[string]*dynamodb.AttributeValue {
