@@ -4,6 +4,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/kms"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 )
 
 type Client struct {
@@ -13,11 +14,11 @@ type Client struct {
 	decrpyter decrpyter
 }
 
-func New(table string, sess *session.Session) *Client {
+func New(table string, sess *session.Session, creds *credentials.Credentials) *Client {
 	return &Client{
 		table:     table,
-		decrpyter: kms.New(sess),
-		dynamoDB:  dynamodb.New(sess),
+		decrpyter: kms.New(sess, aws.NewConfig().WithCredentials(creds)),
+		dynamoDB:  dynamodb.New(sess, aws.NewConfig().WithCredentials(creds)),
 	}
 }
 
