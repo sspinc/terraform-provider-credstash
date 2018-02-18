@@ -71,6 +71,24 @@ provider "credstash" {
 }
 ```
 
+## IAM role 
+
+Use IAM role attached to AWS instance and assume to other role
+
+```hcl
+provider "credstash" {
+  table  = "credstash-table"
+  region = "ap-southeast-2"
+
+  assume_role {
+    role_arn = "role_arn"
+    session_name = "session_name"
+    external_id = "external_id"
+  }
+}
+```
+
+
 ## Development
 
 For dependency management Go modules are used thus you will need go 1.11+

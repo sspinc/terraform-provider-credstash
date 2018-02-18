@@ -4,6 +4,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/kms"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws"
 )
 
 type Client struct {
@@ -18,6 +20,14 @@ func New(table string, sess *session.Session) *Client {
 		table:     table,
 		decrypter: kms.New(sess),
 		dynamoDB:  dynamodb.New(sess),
+	}
+}
+
+func NewWithAssumedRole(table string, sess *session.Session, creds *credentials.Credentials) *Client {
+	return &Client{
+		table:     table,
+		decrypter: kms.New(sess, aws.NewConfig().WithCredentials(creds)),
+		dynamoDB:  dynamodb.New(sess, aws.NewConfig().WithCredentials(creds)),
 	}
 }
 
