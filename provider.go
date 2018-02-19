@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/aws/credentials"
     "github.com/BitPan/terraform-provider-credstash/credstash"
 )
@@ -98,15 +97,15 @@ func providerConfig(d *schema.ResourceData) (interface{}, error) {
         assumeRole := assumeRoleList[0].(map[string]interface{})
         sess, err = session.NewSession(&aws.Config{Region: aws.String(region)})
 
-        creds := stscreds.NewCredentials(sess, assumeRole["role_arn"].(string), func(arp *stscreds.AssumeRoleProvider) {
+        creds = stscreds.NewCredentials(sess, assumeRole["role_arn"].(string), func(arp *stscreds.AssumeRoleProvider) {
             arp.RoleSessionName = assumeRole["session_name"].(string)
             arp.Duration = 60 * time.Minute
             arp.ExpiryWindow = 30 * time.Second
           })
+        return credstash.NewWithAssumedRole(table, sess, creds), nil
+    }
 
-        dynamoDbClient := dynamodb.New(sess, aws.NewConfig().WithCredentials(creds))
-
-    } else if profile != defaultAWSProfile {
+    if profile != defaultAWSProfile {
 		log.Printf("[DEBUG] creating a session for profile: %s", profile)
 		sess, err = session.NewSessionWithOptions(session.Options{
 		    AssumeRoleTokenProvider: stscreds.StdinTokenProvider,
@@ -122,5 +121,5 @@ func providerConfig(d *schema.ResourceData) (interface{}, error) {
 	}
 
 	log.Printf("[DEBUG] configured credstash for table %s", table)
-	return credstash.New(table, sess, creds), nil
+	return credstash.New(table, sess), nil
 }
