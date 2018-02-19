@@ -15,7 +15,15 @@ type Client struct {
 	decrpyter decrpyter
 }
 
-func New(table string, sess *session.Session, creds *credentials.Credentials) *Client {
+func New(table string, sess *session.Session) *Client {
+	return &Client{
+		table:     table,
+		decrpyter: kms.New(sess),
+		dynamoDB:  dynamodb.New(sess),
+	}
+}
+
+func NewWithAssumedRole(table string, sess *session.Session, creds *credentials.Credentials) *Client {
 	return &Client{
 		table:     table,
 		decrpyter: kms.New(sess, aws.NewConfig().WithCredentials(creds)),
