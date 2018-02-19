@@ -18,8 +18,8 @@ type Client struct {
 func New(table string, sess *session.Session) *Client {
 	return &Client{
 		table:     table,
-		decrpyter: kms.New(sess, aws.NewConfig().WithCredentials(creds)),
-		dynamoDB:  dynamodb.New(sess, aws.NewConfig().WithCredentials(creds)),
+		decrpyter: kms.New(sess),
+		dynamoDB:  dynamodb.New(sess),
 	}
 }
 
