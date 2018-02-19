@@ -3,7 +3,6 @@ package main
 import (
 	"log"
     "time"
-    "./credstash"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -11,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/aws/credentials"
+    "github.com/BitPan/terraform-provider-credstash/credstash"
 )
 
 var _ terraform.ResourceProvider = provider()
