@@ -26,6 +26,11 @@ func dataSourceSecret() *schema.Resource {
 				Description: "version of the secrets",
 				Default:     "",
 			},
+			"table": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "table-name",
+			},
 			"context": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -46,13 +51,14 @@ func dataSourceSecretRead(d *schema.ResourceData, meta interface{}) error {
 
 	name := d.Get("name").(string)
 	version := d.Get("version").(string)
+	table := d.Get("table").(string)
 	context := make(map[string]string)
 	for k, v := range d.Get("context").(map[string]interface{}) {
 		context[k] = fmt.Sprintf("%v", v)
 	}
 
-	log.Printf("[DEBUG] Getting secret for name=%q version=%q context=%+v", name, version, context)
-	value, err := client.GetSecret(name, version, context)
+	log.Printf("[DEBUG] Getting secret for name=%q table=%q version=%q context=%+v", name, table, version, context)
+	value, err := client.GetSecret(name, table, version, context)
 	if err != nil {
 		return err
 	}
