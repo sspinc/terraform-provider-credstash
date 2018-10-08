@@ -28,8 +28,9 @@ func dataSourceSecret() *schema.Resource {
 			},
 			"table": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "table-name",
+				Default:     "",
 			},
 			"context": {
 				Type:        schema.TypeMap,

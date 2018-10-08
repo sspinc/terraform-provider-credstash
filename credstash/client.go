@@ -22,6 +22,9 @@ func New(table string, sess *session.Session) *Client {
 }
 
 func (c *Client) GetSecret(name, table, version string, ctx map[string]string) (string, error) {
+	if table == "" {
+		table = c.table
+	}
 	material, err := getKeyMaterial(c.dynamoDB, name, version, table)
 	if err != nil {
 		return "", err
