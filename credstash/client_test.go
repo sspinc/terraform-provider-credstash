@@ -35,7 +35,7 @@ func TestClient_GetSecret(t *testing.T) {
 		table:     "test_table",
 	}
 
-	result, err := c.GetSecret("test_key", "", nil)
+	result, err := c.GetSecret("test_key", "", "", nil)
 	assertNoError(t, err)
 
 	if result != password {
