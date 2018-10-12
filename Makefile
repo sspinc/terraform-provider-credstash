@@ -10,8 +10,7 @@ test:
 	go test $(TESTOPTS) $(PACKAGES)
 
 release:
-	rm -f -R bin
-	GOOS=darwin go build -v -o bin/darwin/terraform-provider-credstash_v$(version)_x4
-	GOOS=linux go build -v -o bin/linux/terraform-provider-credstash_v$(version)_x4
+	GOOS=darwin go build -v -o terraform-provider-credstash_darwin_amd64
+	GOOS=linux go build -v -o terraform-provider-credstash_linux_amd64
 
 .DEFAULT: build
