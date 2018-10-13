@@ -36,13 +36,20 @@ data "credstash_secret" "my_secret" {
     version = "0000000000000000001"
 }
 
+#If you wanna override the default table name.
+
+data "credstash_secret" "my_secret" {
+    table   = "some_table"
+    name    = "some_secret"
+    version = "0000000000000000001"
+}
+
 resource "aws_db_instance" "postgres" {
     password = "${data.credstash_secret.rds_password.value}"
 
     # other important attributes
 }
 ```
-
 ## AWS credentials
 
 AWS credentials are not directly set. Use one of the methods discussed
