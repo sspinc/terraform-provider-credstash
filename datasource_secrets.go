@@ -29,7 +29,7 @@ func dataSourceSecret() *schema.Resource {
 			"table": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "table-name",
+				Description: "name of DynamoDB table where the secrets are stored",
 				Default:     "",
 			},
 			"context": {
@@ -53,6 +53,7 @@ func dataSourceSecretRead(d *schema.ResourceData, meta interface{}) error {
 	name := d.Get("name").(string)
 	version := d.Get("version").(string)
 	table := d.Get("table").(string)
+
 	context := make(map[string]string)
 	for k, v := range d.Get("context").(map[string]interface{}) {
 		context[k] = fmt.Sprintf("%v", v)
