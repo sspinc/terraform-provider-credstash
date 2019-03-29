@@ -10,9 +10,9 @@ type dynamoDB interface {
 	Query(*dynamodb.QueryInput) (*dynamodb.QueryOutput, error)
 }
 
-type decrpyter interface {
+type decrypter interface {
 	Decrypt(*kms.DecryptInput) (*kms.DecryptOutput, error)
 }
 
 var _ dynamoDB = (*dynamodb.DynamoDB)(nil)
-var _ decrpyter = (*kms.KMS)(nil)
+var _ decrypter = (*kms.KMS)(nil)

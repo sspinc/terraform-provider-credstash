@@ -27,7 +27,7 @@ func TestCreateNonce(t *testing.T) {
 	}
 }
 
-func TestDecrpytData(t *testing.T) {
+func TestDecryptData(t *testing.T) {
 	plaintext := []byte("hello world")
 	key := bytes.Repeat([]byte("a"), 32)
 	km := keyMaterial{Content: encrypt(t, key, createNonce(), plaintext)}
@@ -146,7 +146,7 @@ func TestKeyMaterialFromDDBResult(t *testing.T) {
 	}
 }
 
-func TestDecrpytKey(t *testing.T) {
+func TestDecryptKey(t *testing.T) {
 	hmacKey := bytes.Repeat([]byte("a"), 32)
 	dataKey := bytes.Repeat([]byte("b"), 32)
 	ciphertext := []byte("test blob")
