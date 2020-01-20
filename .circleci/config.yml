@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-    - image: circleci/golang:1.11
+    - image: circleci/golang:1.13
       environment:
         GO111MODULE: "on"
     working_directory: /go/src/github.com/sspinc/terraform-provider-credstash
