@@ -4,10 +4,10 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"github.com/sspinc/terraform-provider-credstash/credstash"
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/sspinc/terraform-provider-credstash/credstash"
 )
 
 func dataSourceSecret() *schema.Resource {
