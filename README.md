@@ -13,7 +13,7 @@ Read secrets stored with [credstash][credstash].
 
 3. Copy the provider binary to the terraform plugin directory
 
-         $ cp /path/to/terraform-provider-credstash ~/.terraform.d/plugins/terraform-provider-credstash_v0.3.0
+        $ cp /path/to/terraform-provider-credstash ~/.terraform.d/plugins/terraform-provider-credstash_v0.5.0
 
 4. Profit
 
