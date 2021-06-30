@@ -87,6 +87,10 @@ For dependency management Go modules are used thus you will need go 1.11+
 5. Push your changes
 6. Open a pull request
 
+## License
+
+The project is licensed under the MIT license, See [LICENSE](LICENSE) file for more information.
+
 [credstash]: https://github.com/fugue/credstash
 [awscred]: https://github.com/aws/aws-sdk-go#configuring-credentials
 [provider_binary]: https://github.com/sspinc/terraform-provider-credstash/releases/latest
